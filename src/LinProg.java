@@ -14,6 +14,7 @@ public class LinProg {
 						{-1,6,14,0,20},
 						{180,45,-1,20,0}};  
 		leastPath(mat);
+		doubleLeastPath(mat);
 	}
 	
 	public static Vector<Integer> insideNums(int mat[][], int numRow, Vector<Integer> edges) {
@@ -124,7 +125,8 @@ public class LinProg {
 				}
 			}
 			// write model to file
-			 cplex.exportModel("lpex1.lp");	
+			 cplex.exportModel("lpex1.lp");
+			 
 		}
 		catch(IloException e) {
 			e.printStackTrace();
@@ -133,47 +135,58 @@ public class LinProg {
 		return y;
 	}
 	
-	/*
-	public static void model1() {
+	public static Vector<IloIntVar> doubleLeastPath(int mat[][]) {
+		Vector<IloIntVar> y = new Vector<IloIntVar>();
 		try {
 			//create model
 			IloCplex cplex = new IloCplex();
+			//count edges
+			Vector<Integer> edges = new Vector<>();
+			for (int i=1; i < mat.length; ++i) {
+				for (int j = 0; j < i; ++j) {
+					if (mat[i][j] > 0) {
+					edges.add(mat[i][j]);
+					}
+				}
+			}
+			System.out.println(edges.toString());
+			System.out.println("edges = " + edges.size());
 			
 			//define vars
-			IloIntVar x = cplex.intVar(0, Integer.MAX_VALUE, "x");
-			IloIntVar y = cplex.intVar(0, Integer.MAX_VALUE, "y");
-			
-			//create objective func
+			for (int i =0; i < edges.size(); ++i) {
+				y.add(cplex.intVar(0,Integer.MAX_VALUE));
+			}
+			//create objective function
 			IloLinearNumExpr objective = cplex.linearNumExpr();
-			//IloLinearNumExpr objective = cplex.linearNumExpr();
 			
-			//expressions	
-			objective.addTerm(0.16, x);
-			objective.addTerm(0.15, y);
+			//expressions
+			objective.addTerm(-1.0, y.elementAt(0));
+			objective.addTerm(1.0, y.elementAt(y.size()-1));
 			
+			System.out.println(objective.toString());
 			//define objective
-			cplex.addMinimize(objective);
+			cplex.addMaximize(objective);
 			
-			//define constraints 
-			cplex.addGe(cplex.sum(cplex.prod(61, x), cplex.prod(60, y)),300);
-			cplex.addGe(cplex.sum(cplex.prod(12, x), cplex.prod(6, y)), 43);
-			cplex.addGe(cplex.sum(cplex.prod(13, x), cplex.prod(30, y)), 111);
-			
+			//define constraints
+			for (int i=0; i < mat.length; ++i) {
+				for (int j =0; j < i; ++j) {
+					if (mat[i][j] == -1) continue;
+					cplex.addGe(cplex.sum(mat[i][j], 
+							cplex.sum(y.elementAt(i), cplex.prod(y.elementAt(j), -1.0))), 0);
+				}
+			}
 			//solve
 			if(cplex.solve()) {
 				System.out.println("obj value = " + cplex.getObjValue());
-				System.out.println("x = " + cplex.getValue(x));
-				System.out.println("y = " + cplex.getValue(y));
-				
-				
 			}
-			
-			
+			// write model to file
+			 cplex.exportModel("lpex2.lp");	
 		}
 		catch(IloException e) {
 			e.printStackTrace();
 		}
 		
+		
+		return y;		
 	}
-	*/
 }
