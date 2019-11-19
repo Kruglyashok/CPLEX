@@ -13,7 +13,7 @@ public class LinProg {
 						{-1,22,0,14,-1},
 						{-1,6,14,0,20},
 						{180,45,-1,20,0}};  
-		leastPath(mat);
+		//leastPath(mat);
 		doubleLeastPath(mat);
 	}
 	
@@ -153,9 +153,10 @@ public class LinProg {
 			System.out.println("edges = " + edges.size());
 			
 			//define vars
-			for (int i =0; i < edges.size(); ++i) {
+			for (int i =0; i < mat.length; ++i) {
 				y.add(cplex.intVar(0,Integer.MAX_VALUE));
 			}
+			System.out.println("y.size = " + y.size());
 			//create objective function
 			IloLinearNumExpr objective = cplex.linearNumExpr();
 			
@@ -170,9 +171,9 @@ public class LinProg {
 			//define constraints
 			for (int i=0; i < mat.length; ++i) {
 				for (int j =0; j < i; ++j) {
-					if (mat[i][j] == -1) continue;
+					if (mat[i][j] == -1 || mat[i][j] == 0) continue;
 					cplex.addGe(cplex.sum(mat[i][j], 
-							cplex.sum(y.elementAt(i), cplex.prod(y.elementAt(j), -1.0))), 0);
+							cplex.sum(cplex.prod(y.elementAt(i), -1.0),y.elementAt(j))), 0);
 				}
 			}
 			//solve
@@ -189,4 +190,5 @@ public class LinProg {
 		
 		return y;		
 	}
+	
 }
