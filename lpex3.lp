@@ -2,7 +2,7 @@
 \Problem name: ilog.cplex
 
 Minimize
- obj: 40 x1 + 22 x2 + 6 x3 + 14 x4 + 180 x5 + 45 x6 + 20 x7 + 6 x8 + x9 + x10
+ obj: 40 x1 + 22 x2 + 6 x3 + 14 x4 + 180 x5 + 45 x6 + 20 x7 + 7 x8 + x9 + x10
       + x11 + x12 + x13 + x14 + x15
 Subject To
  c1:  x1 + x5  = 1

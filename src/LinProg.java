@@ -15,10 +15,14 @@ public class LinProg {
 		leastPath(mat);
 		doubleLeastPath(mat);
 		int d[] = {1,1,1,1,1,1,1};
-		System.out.println("Robust results:");
-		for (int i =0; i < d.length; ++i) {
-			System.out.println("Gamma = " + i + "  robust obj func = " + robust(mat,i,d));
+		String res = "";
+		for (int i =0; i <= d.length; ++i) {
+			res+="Gamma = " + i + "  robust obj func = " + robust(mat,i,d) + "\n";
+			//System.out.println("Gamma = " + i + "  robust obj func = " + robust(mat,i,d));
 			}
+
+		System.out.println("Robust results:");
+		System.out.println(res);
 	}
 	
 	public static Vector<Integer> insideNums(int mat[][], int numRow, Vector<Integer> edges) {
