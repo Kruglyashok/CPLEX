@@ -14,7 +14,7 @@ public class LinProg {
 						{180,45,-1,20,0}};  
 		leastPath(mat);
 		doubleLeastPath(mat);
-		int d[] = {1,1,1,1,1,1,1};
+		int d[] = {3,1,4,1,1,1,5};
 		String res = "";
 		for (int i =0; i <= d.length; ++i) {
 			res+="Gamma = " + i + "  robust obj func = " + robust(mat,i,d) + "\n";
